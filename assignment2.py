@@ -41,7 +41,12 @@ class TodoItem:
 
 def add_task():
     """Function for getting user input, creating task item and adding the item to todo_list.json file"""
-
+    open_todo_file = open(TODO_FILE, "a+")
+    
+    title = input("Enter task title: ")
+    description = input("Enter short description: ")
+    due_date = input("Enter due date (YYYY-MM-DD): ")
+    priority = input("Enter priority (High/Medium/Low): ").capitalize()
 
 
 def view_tasks():
