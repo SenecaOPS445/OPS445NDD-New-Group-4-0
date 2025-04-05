@@ -68,10 +68,23 @@ def add_task():
   open_todo_file.close() 
   print("\nTask added successfully!")
 
-
 def view_tasks():
-    """Function for viewing all tasks in the todo_list.json file"""
+    open_todo_file = open(TODO_FILE, "r")   # open the to-do file in read mode ("r")
+    todo_str = open_todo_file.read().strip('\n')#.split('{')
     
+    # Use regex to find all blocks of text that look like a JSON object (anything between { and }) which will give us just a list of task entries
+    todo_list = re.findall(r'\{[^}]*\}', todo_str)
+    
+    # Check if the list is empty
+    if len(todo_list) == 0 or (len(todo_list) == 1 and len(todo_list[0]) == 0):
+        print("\nYou have zero items in your todo list. \nRun the program again and select option 1, if you would like to add a task")
+        open_todo_file.close() #close file before exiting
+        return False
+    # loop the list of tasks and print each one with numbers
+    for i, task in enumerate(todo_list, 1):
+        print(f"\n{i}. {task}")
+    
+    open_todo_file.close()
 
 def remove_task():
     """Function for removing individual tasks from the todo_list.json file"""
