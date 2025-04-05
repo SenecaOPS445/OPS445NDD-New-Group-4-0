@@ -41,7 +41,6 @@ class TodoItem:
 
 def add_task():
     """Function for getting user input, creating task item and adding the item to todo_list.json file"""
-    def add_task():
   
   open_todo_file = open(TODO_FILE< "a+") # Open file in append, read mode
   
@@ -56,7 +55,7 @@ def add_task():
   if not valid_date(due_date):  # testing if the user input date and priority is valid
     print("\nInvalid due_date. ")
     
-  if priority not in ["High", "Medium", "Low"]: 
+  if priority not in ["High", "Medium", "Low"]: #testing if the priority inputted is valid
     print("\nInvalid priority! Defaulting to 'Low'.")
     priority = "Low"
     
