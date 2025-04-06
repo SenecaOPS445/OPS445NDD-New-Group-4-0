@@ -69,6 +69,7 @@ def add_task():
   print("\nTask added successfully!")
 
 def view_tasks():
+    """Function for viewing all tasks in the todo_list.json file"""
     open_todo_file = open(TODO_FILE, "r")   # open the to-do file in read mode ("r")
     todo_str = open_todo_file.read().strip('\n')#.split('{')
     
