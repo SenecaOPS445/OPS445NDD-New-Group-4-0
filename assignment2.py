@@ -132,6 +132,11 @@ def valid_date(date: str) -> bool:
 
 
     #TODO: Make sure date is either todays date or future date 
+    input_date = datetime(year, month, day).date() # Sets the inputted date to a value
+    today_date = datetime.today().date # Sets today's date to a value
+
+    if input_date < today_date: # Checks if date is today or in the future
+        return False
 
     return True
 
