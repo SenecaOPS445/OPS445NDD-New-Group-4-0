@@ -136,10 +136,10 @@ def valid_date(date: str) -> bool:
     return True
 
 def main():
-    # Define the to-do list for temporary storage access 
+    # Define the to-do list for temporary storage access.
     todo_list = []
 
-    # Checks if the todo file exits. If not, it creates it.
+    # Check if the todo file exits. If not, it creates it.
     if not os.path.isfile(TODO_FILE):
         print(f"{TODO_FILE} does not exist. Created file {TODO_FILE} in current directory")
         todo_file = open(TODO_FILE, "w")
@@ -163,15 +163,23 @@ def main():
         print("\n** To-Do List Menu **")
         print("1. Add Task")
         print("2. View Tasks")
+        print("3. Remove Task")
+        print("4. Exit")
 
-        choice = input ("choose an option: ").strip()
+        # Get the user's input and run the selected option.
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            add_task()
+            add_task()      # Call groupmate's add task function.
         elif choice == "2":
-            view_tasks()
+            view_tasks()    # Call groupmate's view task function.
+        elif choice == "3":
+            remove_task()   # Call groupmate's remove task function.
+        elif choice == "4":
+            print("\nExiting... Goodbye!")  # Exits the program and displays the message.
+            break
         else:
-            print("\nInvalid choice, try again.")
+            print("\nInvalid choice, try again.")   # Fallback for an invalid input.
 
 if __name__ == "__main__":
     main()
