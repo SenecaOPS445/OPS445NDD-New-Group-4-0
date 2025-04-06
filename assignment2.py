@@ -130,8 +130,6 @@ def valid_date(date: str) -> bool:
     if day < 1 or day > mon_max(month, year):
         return False
 
-
-    #TODO: Make sure date is either todays date or future date 
     input_date = datetime(year, month, day).date() # Sets the inputted date to a value
     today_date = datetime.today().date # Sets today's date to a value
 
@@ -144,12 +142,39 @@ def main():
     # Define the to-do list for temporary storage access 
     todo_list = []
 
+    # Checks if the todo file exits. If not, it creates it.
     if not os.path.isfile(TODO_FILE):
         print(f"{TODO_FILE} does not exist. Created file {TODO_FILE} in current directory")
         todo_file = open(TODO_FILE, "w")
         todo_file.close()
 
+    # If --show argument is used, display the tasks and then exit.
+    if args.show:
+        open_todo_file = open(TODO_FILE, "r")
+        todo_list = open_todo_file.read().strip('\n').split(' ')
+        if len(todo_list) == 0 or (len(todo_list) == 1 and len(todo_list[0]) == 0):
+            print("\nYou have zero items in your todo list")
+            open_todo_file.close()
+            exit()
+        else:
+            view_tasks()
+            open_todo_file.close()
+            exit()
 
+    # Menu loop for the user to interact with the program.
+    while True:
+        print("\n** To-Do List Menu **")
+        print("1. Add Task")
+        print("2. View Tasks")
+
+        choice = input ("choose an option: ").strip()
+
+        if choice == "1":
+            add_task()
+        elif choice == "2":
+            view_tasks()
+        else:
+            print("\nInvalid choice, try again.")
 
 if __name__ == "__main__":
     main()
