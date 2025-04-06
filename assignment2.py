@@ -68,13 +68,68 @@ def add_task():
   open_todo_file.close() 
   print("\nTask added successfully!")
 
-
 def view_tasks():
     """Function for viewing all tasks in the todo_list.json file"""
+    open_todo_file = open(TODO_FILE, "r")   # open the to-do file in read mode ("r")
+    todo_str = open_todo_file.read().strip('\n')#.split('{')
     
+    # Use regex to find all blocks of text that look like a JSON object (anything between { and }) which will give us just a list of task entries
+    todo_list = re.findall(r'\{[^}]*\}', todo_str)
+    
+    # Check if the list is empty
+    if len(todo_list) == 0 or (len(todo_list) == 1 and len(todo_list[0]) == 0):
+        print("\nYou have zero items in your todo list. \nRun the program again and select option 1, if you would like to add a task")
+        open_todo_file.close() #close file before exiting
+        return False
+    # loop the list of tasks and print each one with numbers
+    for i, task in enumerate(todo_list, 1):
+        print(f"\n{i}. {task}")
+    
+    open_todo_file.close()
 
 def remove_task():
-    """Function for removing individual tasks from the todo_list.json file"""
+"""Function for removing individual tasks from the todo_list.json file"""
+    # show the current list of tasks using view_tasks, if there are no tasks it will exit the program
+
+    if not view_tasks():
+        exit()
+
+    # open the to-do file in read mode to load all tasks
+    open_todo_file = open(TODO_FILE, "r")
+
+    # remove any trailing newline characters
+    todo_str = open_todo_file.read().strip('\n')
+
+    #using regex to find all the JSON-style task entries in the file
+    todo_list = re.findall(r'\{[^}]*\}', todo_str)
+
+    try:
+        # the user can choose which task they want to remove (by number)
+        index = int(input("\nEnter task number to remove: "))
+
+        # print debug info (can be removed later)
+        print(len(todo_list))  # total number of tasks
+        print(index)  # index entered by the user
+
+        # Check if the entered index is valid
+        if 0 < index <= len(todo_list):
+            index = index - 1  # adjust because list indexes start at 0
+            removed_task = todo_list.pop(index)  # Remove the task from the list
+
+            print(f"\nRemoved task: {removed_task}")
+            open_todo_file.close()  # Close the file
+
+            # overwrite the file with the updated task list
+            open_todo_file = open(TODO_FILE, "w")
+            for todo_string in todo_list:
+                open_todo_file.write("\n" + todo_string)  # write each task
+            open_todo_file.close()  # Close the file after writing
+        else:
+            # if the entered number is not the correct range
+            print("\nInvalid task number.")
+    except ValueError:
+        # If the user entered something other than a number
+        print("\nPlease enter a valid number.")
 
 def leap_year(year: int) -> bool:
     """Check if year is a leap year. Returns True if leap year and False if it isn't"""
