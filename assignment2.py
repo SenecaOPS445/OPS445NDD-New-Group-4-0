@@ -42,31 +42,33 @@ class TodoItem:
 def add_task():
     """Function for getting user input, creating task item and adding the item to todo_list.json file"""
   
-  open_todo_file = open(TODO_FILE< "a+") # Open file in append, read mode
+    open_todo_file = open(TODO_FILE, "a+") # Open file in append, read mode
   
-  title = input("Enter Task Title: ")   #Ask user to input Title, description, due_date and priority of the task. 
-  
-  description = input("Enter Short Description: ")
-  
-  dute_date = input("Enter due date (YYYY-MM-DD): ")
-  
-  priority = input("Enter Priority (High/Medium/Low: ").capitalize()
-  
-  if not valid_date(due_date):  # testing if the user input date and priority is valid
-    print("\nInvalid due_date. ")
+    title = input("Enter Task Title: ")   #Ask user to input Title, description, due_date and priority of the task. 
     
-  if priority not in ["High", "Medium", "Low"]: #testing if the priority inputted is valid
-    print("\nInvalid priority! Defaulting to 'Low'.")
-    priority = "Low"
+    description = input("Enter Short Description: ")
     
-  todo_item = TodoItem(title, description, due_date, priority)  # create a new task object using the TodoItem class
-  todo_dict = todo_item.__dict__ # convert the task object to a dictionary so it can be saved as JSON
-  todo_string = json.dumps(todo_dict) # convert dict to json string
-  print(type(json.dumps(todo_dict)))  
-  open_todo_file.write("\n" + todo_string) # wite the task to the file with a new line before it
-  #close the file after writing and inform the user the task has been added 
-  open_todo_file.close() 
-  print("\nTask added successfully!")
+    due_date = input("Enter due date (YYYY-MM-DD): ")
+    
+    priority = input("Enter Priority (High/Medium/Low: ").capitalize()
+    
+    if not valid_date(due_date):  # testing if the user input date and priority is valid
+        print("\nInvalid due_date. ")
+        exit()
+        
+    if priority not in ["High", "Medium", "Low"]: #testing if the priority inputted is valid
+        print("\nInvalid priority! Defaulting to 'Low'.")
+        priority = "Low"
+        
+    todo_item = TodoItem(title, description, due_date, priority)  # create a new task object using the TodoItem class
+    
+    todo_dict = todo_item.__dict__ # convert the task object to a dictionary so it can be saved as JSON
+    todo_string = json.dumps(todo_dict) # convert dict to json string
+    
+    open_todo_file.write("\n" + todo_string) # write the task to the file with a new line before it
+    #close the file after writing and inform the user the task has been added 
+    open_todo_file.close() 
+    print("\nTask added successfully!")
 
 def view_tasks():
     """Function for viewing all tasks in the todo_list.json file"""
@@ -81,14 +83,17 @@ def view_tasks():
         print("\nYou have zero items in your todo list. \nRun the program again and select option 1, if you would like to add a task")
         open_todo_file.close() #close file before exiting
         return False
+    
     # loop the list of tasks and print each one with numbers
     for i, task in enumerate(todo_list, 1):
         print(f"\n{i}. {task}")
     
     open_todo_file.close()
+    return True
 
 def remove_task():
-"""Function for removing individual tasks from the todo_list.json file"""
+    """Function for removing individual tasks from the todo_list.json file"""
+
     # show the current list of tasks using view_tasks, if there are no tasks it will exit the program
 
     if not view_tasks():
@@ -106,11 +111,7 @@ def remove_task():
     try:
         # the user can choose which task they want to remove (by number)
         index = int(input("\nEnter task number to remove: "))
-
-        # print debug info (can be removed later)
-        print(len(todo_list))  # total number of tasks
-        print(index)  # index entered by the user
-
+        
         # Check if the entered index is valid
         if 0 < index <= len(todo_list):
             index = index - 1  # adjust because list indexes start at 0
@@ -185,10 +186,21 @@ def valid_date(date: str) -> bool:
     if day < 1 or day > mon_max(month, year):
         return False
 
-    input_date = datetime(year, month, day).date() # Sets the inputted date to a value
-    today_date = datetime.today().date # Sets today's date to a value
+    #Check if the date given is either todays date or a further date
+    now = datetime.now() # Get current date and time
 
-    if input_date < today_date: # Checks if date is today or in the future
+    # Extract year, month, and day as integers
+    current_year = now.year
+    current_month = now.month
+    current_day = now.day
+ 
+    if year < current_year: # make sure inputted year isn't less than current year
+        return False
+    
+    if year == current_year and month < current_month: # make sure inputted month isn't less than current month
+        return False
+    
+    if year == current_year and month == current_month and day < current_day: 
         return False
 
     return True
@@ -228,11 +240,11 @@ def main():
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            add_task()      # Call groupmate's add task function.
+            add_task()      # Call add task function.
         elif choice == "2":
-            view_tasks()    # Call groupmate's view task function.
+            view_tasks()    # Call view task function.
         elif choice == "3":
-            remove_task()   # Call groupmate's remove task function.
+            remove_task()   # Call remove task function.
         elif choice == "4":
             print("\nExiting... Goodbye!")  # Exits the program and displays the message.
             break
