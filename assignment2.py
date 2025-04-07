@@ -93,6 +93,7 @@ def view_tasks():
 
 def remove_task():
     """Function for removing individual tasks from the todo_list.json file"""
+
     # show the current list of tasks using view_tasks, if there are no tasks it will exit the program
 
     if not view_tasks():
@@ -110,7 +111,7 @@ def remove_task():
     try:
         # the user can choose which task they want to remove (by number)
         index = int(input("\nEnter task number to remove: "))
-
+        
         # Check if the entered index is valid
         if 0 < index <= len(todo_list):
             index = index - 1  # adjust because list indexes start at 0
